@@ -12,11 +12,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
     static final String DB_NAME = "FOOD_EQUIVALENTS_DB";
     static final String FOOD_TABLE_NAME = "FOOD";
+    static final String DAILY_MENU_TABLE_NAME = "DAILY_MENU";
+    static final String DAILY_MENU_ENTRY_TABLE_NAME = "DAILY_MENU_ENTRY";
     static final String FOOD_TYPE_TABLE_NAME = "FOOD_TYPE";
     static final String FOOD_UNIT_TABLE_NAME = "FOOD_UNIT";
 
     static final String FOOD_NAME_COLUMN = "name";
     static final String FOOD_QUANTITY_COLUMN = "quantity";
+    static final String DAILY_MENU_NAME_COLUMN = "name";
+    static final String DAILY_MENU_FK_COLUMN = "daily_menu_id";
+    static final String DAILY_MENU_ENTRY_QUANTITY_COLUMN = "food_quantity";
     static final String FOOD_TYPE_FK_COLUMN = "food_type_id";
     static final String FOOD_UNIT_FK_COLUMN = "food_unit_id";
     static final String FOOD_TYPE_TYPE_COLUMN = "type";
@@ -47,6 +52,18 @@ public class DBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY ('" + FOOD_TYPE_FK_COLUMN + "') REFERENCES " + FOOD_TYPE_TABLE_NAME + " ('id'), " +
                 "FOREIGN KEY ('" + FOOD_UNIT_FK_COLUMN + "') REFERENCES " + FOOD_UNIT_TABLE_NAME + " ('id'))");
 
+        db.execSQL("CREATE TABLE " + DAILY_MENU_TABLE_NAME +
+                "(id INTEGER PRIMARY KEY, " +
+                DAILY_MENU_NAME_COLUMN + " VARCHAR(30) NOT NULL)");
+
+        db.execSQL("CREATE TABLE " + DAILY_MENU_ENTRY_TABLE_NAME +
+                "(id INTEGER PRIMARY KEY," +
+                DAILY_MENU_FK_COLUMN + " INTEGER NOT NULL," +
+                FOOD_TYPE_FK_COLUMN + " INTEGER NOT NULL," +
+                DAILY_MENU_ENTRY_QUANTITY_COLUMN + " INTEGER NOT NULL DEFAULT 0," +
+                "FOREIGN KEY (" + DAILY_MENU_FK_COLUMN + ") REFERENCES " + DAILY_MENU_TABLE_NAME + " ('id')," +
+                "FOREIGN KEY (" + FOOD_TYPE_FK_COLUMN + ") REFERENCES " + FOOD_TYPE_TABLE_NAME + " ('id'))");
+
         insertDefaultEntries(db);
     }
 
@@ -75,7 +92,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 {"Paquete", "pqt"},
                 {"Gramo", "gr"},
                 {"Mililitros", "ml"}
-
         };
 
         for (String entry : foodTypes) {
@@ -96,6 +112,17 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(FOOD_QUANTITY_COLUMN, 2);
         cv.put(FOOD_TYPE_FK_COLUMN, 1);
         cv.put(FOOD_UNIT_FK_COLUMN, 2);
+        db.insert(FOOD_TABLE_NAME, null, cv);
+
+        cv.put("id", 1);
+        cv.put(DAILY_MENU_NAME_COLUMN, "Menú por defecto");
+        db.insert(DAILY_MENU_TABLE_NAME, null, cv);
+
+        cv.put("id", 1);
+        cv.put(DAILY_MENU_FK_COLUMN, 1);
+        cv.put(FOOD_TYPE_FK_COLUMN, 3);
+        cv.put(DAILY_MENU_ENTRY_QUANTITY_COLUMN, 8);
+        db.insert(DAILY_MENU_ENTRY_TABLE_NAME, null, cv);
     }
 
     @Override
@@ -116,9 +143,8 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public Cursor getData(){
+    public Cursor getData() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + FOOD_TYPE_TABLE_NAME, null);
-        return res;
+        return db.rawQuery("select * from " + FOOD_TYPE_TABLE_NAME, null);
     }
 }

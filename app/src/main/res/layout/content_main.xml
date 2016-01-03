@@ -14,18 +14,95 @@
     tools:context="com.example.pepedou.generadordeequivalencias.MainActivity">
 
     <TextView
-        android:text="Hello World!"
+        android:text="Menú del día"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/mainTextView" />
+        android:id="@+id/mainTextView"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/abc_text_size_title_material"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/mainTableLayout"
+        android:layout_below="@+id/mainTextView"
+        android:layout_above="@+id/fab">
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="16dp"
+                android:text="Alimento"
+                android:id="@+id/mainAlimentoTableTitle"
+                android:layout_column="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="16dp"
+                android:text="Equi."
+                android:id="@+id/mainEquivalenteTableTitle"
+                android:layout_column="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="16dp"
+                android:text="Des."
+                android:id="@+id/mainDesayunoTableTitle"
+                android:layout_column="2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="16dp"
+                android:text="Col. 1"
+                android:id="@+id/mainCol1TableTitle"
+                android:layout_column="3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+                android:text="Comida"
+                android:id="@+id/mainComidaTableTitle"
+                android:layout_column="4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+                android:text="Col. 2"
+                android:id="@+id/mainCol2TableTitle"
+                android:layout_column="5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+                android:text="Cena"
+                android:id="@+id/mainCenaTableTitle"
+                android:layout_column="6" />
+        </TableRow>
+    </TableLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="65dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab"
+        android:src="@mipmap/plus_sign"
+        app:borderWidth="2dp"
+        app:fabSize="normal"
+        android:onClick="submit"
+        app:rippleColor="@color/colorPrimaryDark"
+        android:layout_marginBottom="45dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/fab" />
+        android:layout_alignParentEnd="true">
 
+    </android.support.design.widget.FloatingActionButton>
 </RelativeLayout>

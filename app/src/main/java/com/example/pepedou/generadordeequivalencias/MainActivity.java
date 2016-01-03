@@ -1,17 +1,19 @@
 package com.example.pepedou.generadordeequivalencias;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.orm.SugarContext;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,23 +33,36 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        DBHelper db = new DBHelper(this);
+        SugarContext.init(this);
 
-        TextView mainTextView = (TextView) this.findViewById(R.id.mainTextView);
+        TableLayout tableLayout = (TableLayout) this.findViewById(R.id.mainTableLayout);
 
-        Cursor result = db.getData();
+        DailyMenu dailyMenu = DailyMenu.first(DailyMenu.class);
 
-        while (result.moveToNext()) {
-            String foodType = result.getString(result.getColumnIndex(DBHelper.FOOD_TYPE_TYPE_COLUMN));
-
-            mainTextView.append(foodType + "\n");
+        if (dailyMenu == null) {
+            Toast.makeText(this, "Error al cargar el menú del día", Toast.LENGTH_LONG).show();
+            return;
         }
 
-        if(!result.isClosed()) {
-            result.close();
-        }
+        for (DailyMenuEntry menuEntry : dailyMenu.getMenuEntries()) {
+            TableRow newRow = new TableRow(this);
+            TextView foodColumn = new TextView(this);
+            TextView quantityColumn = new TextView(this);
 
-        db.close();
+            foodColumn.setText(menuEntry.foodType.name);
+            quantityColumn.setText(menuEntry.foodQuantity.toString());
+
+            newRow.addView(foodColumn);
+            newRow.addView(quantityColumn);
+
+            tableLayout.addView(newRow);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SugarContext.terminate();
     }
 
     @Override
